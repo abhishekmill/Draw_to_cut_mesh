@@ -12,8 +12,6 @@ sceneContainer.id = "scene-container";
 
 const sceneContext = createScene(sceneContainer);
 
-
-
 console.log("count", sceneContext.cutManager.activeModels.length);
 console.log("mode", sceneContext.cutManager.activeMode);
 
@@ -35,5 +33,3 @@ const navbar = createNavbar(
 
 appElement.appendChild(navbar);
 appElement.appendChild(sceneContainer);
-
-updateHUD();
