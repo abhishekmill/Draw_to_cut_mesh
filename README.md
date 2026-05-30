@@ -35,14 +35,7 @@ Apart from the build tooling, the application intentionally limits external depe
 
 Slicing is performed directly on the CPU by mathematically modifying the underlying vertex buffers of the 3D geometry. The cutting process is broken down into four distinct phases:
 
-```mermaid
-graph TD
-    A[Draw 2D Cut Line] --> B[Derive 3D Cutting Plane]
-    B --> C[Classify & Split Triangles]
-    C --> D[Stitch Boundary Loops]
-    D --> E[Triangulate & Generate Caps]
-    E --> F[Register Part A & Part B Meshes]
-```
+
 
 ### 1. Deriving the 3D Slicing Plane
 When the user drags their cursor in "Cut" mode, we record the start and end coordinates in screen space.
