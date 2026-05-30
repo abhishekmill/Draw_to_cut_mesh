@@ -84,28 +84,6 @@ export class CutManager {
     window.addEventListener("mouseup", this.onMouseUp.bind(this));
   }
 
-  private isClipped(hit: THREE.Intersection): boolean {
-    const mesh = hit.object as THREE.Mesh;
-    if (!mesh || !mesh.material) return false;
-
-    let planes: THREE.Plane[] = [];
-    if (Array.isArray(mesh.material)) {
-      const mat =
-        mesh.material[hit.face?.materialIndex ?? 0] || mesh.material[0];
-      if (mat && mat.clippingPlanes) {
-        planes = mat.clippingPlanes;
-      }
-    } else if (mesh.material && mesh.material.clippingPlanes) {
-      planes = mesh.material.clippingPlanes;
-    }
-
-    for (const plane of planes) {
-      if (plane.distanceToPoint(hit.point) < -1e-5) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   private getMousePosition(e: MouseEvent) {
     const rect = this.container.getBoundingClientRect();
@@ -152,13 +130,7 @@ export class CutManager {
 
       console.log("intersects objects", intersects);
 
-      let firstValidIntersect: THREE.Intersection | null = null;
-      for (const hit of intersects) {
-        if (!this.isClipped(hit)) {
-          firstValidIntersect = hit;
-          break;
-        }
-      }
+      const firstValidIntersect: THREE.Intersection | null = intersects[0] || null;
       console.log("firstValidIntersect", firstValidIntersect);
       if (firstValidIntersect) {
         const hit = firstValidIntersect;
@@ -313,7 +285,7 @@ export class CutManager {
         segmentRaycaster.setFromCamera(ndc, this.camera);
         const intersects = segmentRaycaster.intersectObject(model, true);
 
-        const hasValidHit = intersects.some((hit) => !this.isClipped(hit));
+        const hasValidHit = intersects.length > 0;
         if (hasValidHit) {
           intersectsModel = true;
           break;
@@ -340,8 +312,6 @@ export class CutManager {
       this.scene.add(partB);
       this.activeModels.push(partA, partB);
 
-      MeshCutter.updateClippingPlanes(partA);
-      MeshCutter.updateClippingPlanes(partB);
     });
 
     this.notifyStateChange();

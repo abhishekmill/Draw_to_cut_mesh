@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { loadModel } from "./loader";
 import { CutManager } from "./systems/CutManager";
-import { MeshCutter } from "./systems/MeshCutter";
 
 export type SceneContext = {
   scene: THREE.Scene;
@@ -119,10 +118,6 @@ export function createScene(container: HTMLElement): SceneContext {
     rafId = requestAnimationFrame(animate);
 
     controls.update();
-
-    cutManager.activeModels.forEach((model) => {
-      MeshCutter.updateClippingPlanes(model);
-    });
 
     renderer.render(scene, camera);
   };
